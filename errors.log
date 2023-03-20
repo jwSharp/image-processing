@@ -1,7 +1,0 @@
-bmp_stenography.c: In function ‘main’:
-bmp_stenography.c:43:7: warning: unused variable ‘file’ [-Wunused-variable]
-   43 |   bmp file;
-      |       ^~~~
-bmp_stenography.c:42:9: warning: unused variable ‘content’ [-Wunused-variable]
-   42 |   void* content[100];
-      |         ^~~~~~~
