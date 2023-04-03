@@ -29,6 +29,8 @@ void display_header(bmp header);
 void reveal(FILE* photo, bmp header);
 char swap_bits(char color);
 
+/********************************************************************************/
+
 int main(int argc, char** argv) {
   //
   // Open file
@@ -37,7 +39,7 @@ int main(int argc, char** argv) {
     return -1;
   }
 
-  FILE* photo = fopen(argv[1], "r");
+  FILE* photo = fopen(argv[1], "r+");
   if (photo == NULL) {
     fprintf(stderr, "File not successfully opened.");
     return -1;
@@ -87,6 +89,10 @@ int main(int argc, char** argv) {
   return 0;
 }
 
+
+/********************************************************************************/
+
+
 void check_read(size_t read, int goal){
   /*
    * Checks for proper number of successfully read objects.
@@ -100,6 +106,20 @@ void check_read(size_t read, int goal){
     }
   }
 }
+
+void check_seek(int failure, int origin, long offset) {
+  if (failure) {
+    if (offset >= 0) {
+      fprintf(stderr, "Failed to seek from %i forward %ld", origin, offset);
+    } else {
+      fprintf(stderr, "Failed to seek from %i backwards %ld", origin, offset);
+    }
+  }
+}
+
+
+/********************************************************************************/
+
 
 void display_header(bmp header) {
   fprintf(stdout, "=== BMP Header ===\n");
@@ -123,7 +143,6 @@ void display_header(bmp header) {
   fprintf(stdout, "# important colors: %i\n", header.dib.num_imp_colors);
 }
 
-
 void reveal(FILE* photo, bmp header) {
   /*
    * Switches each color's MSBs with the LSBs.
@@ -142,21 +161,33 @@ void reveal(FILE* photo, bmp header) {
 
   //
   // Alter Colors
-  fseek(photo, header.bitmap.offset, SEEK_SET); // from beginning of file
+  check_seek(fseek(photo, header.bitmap.offset, SEEK_SET), 0, header.bitmap.offset); // from beginning of file
   rgb color;
-  for (int i = 0; i < 2; i++ ) {
-    check_read(fread(&color, sizeof(color.r), 3, photo), 3);
-    printf("old: %x %x %x\n", color.r, color.g, color.b);
+  int padding = (sizeof(color) * header.dib.width) % 4; // Padding, align row to multiple of 4
+
+  for (int h=0; h<header.dib.height; h++) {
+    for (int w=0; w<header.dib.width; w++) {
+      check_read(fread(&color, sizeof(color.r), 3, photo), 3);
+      printf("%x%x%x", color.r, color.g, color.b);
+
+      // Swap Bits
+      color.r = swap_bits(color.r);
+      color.g = swap_bits(color.g);
+      color.b = swap_bits(color.b);
+
+      // Update photo
+      check_seek(fseek(photo, -sizeof(color), SEEK_CUR), SEEK_CUR, -sizeof(color.r) * 3);
+      fwrite(&color, sizeof(color), 1, photo);
+ 
+      /*
+      check_seek(fseek(photo, -sizeof(color), SEEK_CUR), SEEK_CUR, -sizeof(color.r) * 3);
+      check_read(fread(&color, sizeof(color.r), 3, photo), 3);
+      printf("%x%x%x", color.r, color.g, color.b);*/
+    }
     
-    // Swap Bits
-    color.r = swap_bits(color.r);
-    color.g = swap_bits(color.g);
-    color.b = swap_bits(color.b);
-    
-    printf("new: %x %x %x\n", color.r, color.g, color.b);
+    check_seek(fseek(photo, padding, SEEK_CUR), SEEK_CUR, padding); // End of row padding
   }
 }
-
 
 char swap_bits(char color) {
   /*
