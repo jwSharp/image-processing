@@ -168,7 +168,7 @@ void reveal(FILE* photo, bmp header) {
   for (int h=0; h<header.dib.height; h++) {
     for (int w=0; w<header.dib.width; w++) {
       check_read(fread(&color, sizeof(color.r), 3, photo), 3);
-      printf("%x%x%x", color.r, color.g, color.b);
+      rgb before = color;
 
       // Swap Bits
       color.r = swap_bits(color.r);
@@ -179,10 +179,12 @@ void reveal(FILE* photo, bmp header) {
       check_seek(fseek(photo, -sizeof(color), SEEK_CUR), SEEK_CUR, -sizeof(color.r) * 3);
       fwrite(&color, sizeof(color), 1, photo);
  
-      /*
+      
       check_seek(fseek(photo, -sizeof(color), SEEK_CUR), SEEK_CUR, -sizeof(color.r) * 3);
       check_read(fread(&color, sizeof(color.r), 3, photo), 3);
-      printf("%x%x%x", color.r, color.g, color.b);*/
+      rgb after = color;
+      int is_same; if (before.r == after.r) { is_same = 1; } else { is_same = 0; }
+      fprintf(stderr, "%i", is_same);
     }
     
     check_seek(fseek(photo, padding, SEEK_CUR), SEEK_CUR, padding); // End of row padding
