@@ -191,18 +191,39 @@ void reveal(FILE* photo, bmp header) {
   }
 }
 
+
+/********************************************************************************/
+
+
 char swap_bits(char color) {
   /*
    * Use masks to swap the first 4 bits with the last 4 bits.
    */
   char msb, lsb, temp;
+
+  // split color
   msb = 0xF0 & color;
   lsb = 0x0F & color;
+
+  // switch order
   temp = msb;
   msb = lsb << 4;
   lsb = temp >> 4;
   return lsb | msb;
 }
 
+char combine_bits(char color1, char color2) {
+  /*
+   * Use masks to combine the MSBs of two different photos.
+   */
+  char msb, lsb;
 
+  // capture MSB of each color
+  msb = 0xF0 & color1;
+  lsb = 0xF0 & color2;
+
+  // combine colors
+  lsb = lsb >> 4;
+  return msb | lsb;
+}
 
