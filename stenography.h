@@ -54,14 +54,24 @@ bmp_file open_bmp(const char *filename);
 /**
  * @brief Displays the BMP and DIB headers of a BMP file.
  * @details Takes a bmp photo and prints out the contents of the photo's header.
- * @param photo A bmp photo containing header information.
+ * @param bmp A bmp photo containing header information.
  */
 void display_header(bmp_file bmp);
 
 /**
- * Reveals an image hidden in the least significant bits of a given image.
+ * @brief Reveals an photo hidden in the LSbs of an photo.
+ * @details Alters the original photo by swapping its MSbs and LSbs and revealing the hidden photo.
+ * @param bmp bmp photo containing a hidden photo.
  */
 void reveal(bmp_file bmp);
+
+/**
+ * @brief Hides one photo inside of another photo.
+ * @details Stores the MSbs of the hidden photo as the LSbs of the target photo.
+ * @param target Target bmp photo which will hide the other photo.
+ * @param hidden bmp photo to hide inside of the target photo
+ */
+void hide(bmp_file target, bmp_file hidden);
 
 void invert_image(const char *in_filename);
 
@@ -81,7 +91,7 @@ void hflip_image(const char *in_filename);
 char swap_bits(char color);
 
 /**
- * Use masks to combine the MSBs of two different photos.
+ * Use masks to combine the MSbs of two different photos.
  */
 char combine_bits(char color1, char color2);
 
