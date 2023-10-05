@@ -10,8 +10,6 @@
 #include <string.h>
 #include "stenography.h"
 
-#define DEBUG 0
-
 /****************************************/
 /*************** BMP File ***************/
 /****************************************/
@@ -23,13 +21,9 @@ bmp_file open_bmp(const char *filename)
     // Open file
     bmp.photo = fopen(filename, "r+");
 
-#if DEBUG
-    printf("Sucessfully opened file.\n");
-#endif
-
     if (bmp.photo == NULL)
     {
-        fprintf(stderr, "Photo not successfully opened.\n");
+        fprintf(stderr, "%s not successfully opened.\n", filename);
         return bmp;
     }
 
@@ -37,7 +31,7 @@ bmp_file open_bmp(const char *filename)
     checked_read(bmp.header.bitmap.id, sizeof(bmp.header.bitmap.id), 1, bmp.photo);
     if (strncmp(bmp.header.bitmap.id, "BM", 2))
     {
-        fprintf(stderr, "Incorrect file type.\n");
+        fprintf(stderr, "%s is the incorrect file type.\n", filename);
         bmp.photo = NULL;
         return bmp;
     }
@@ -59,9 +53,6 @@ bmp_file open_bmp(const char *filename)
     checked_read(&bmp.header.dib.num_colors, sizeof(bmp.header.dib.num_colors), 1, bmp.photo);
     checked_read(&bmp.header.dib.num_imp_colors, sizeof(bmp.header.dib.num_imp_colors), 1, bmp.photo);
 
-#if DEBUG
-    printf("Sucessfully opened stored the headers.\n");
-#endif
     return bmp;
 }
 
