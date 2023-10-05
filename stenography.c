@@ -10,6 +10,8 @@
 #include <string.h>
 #include "stenography.h"
 
+#define DEBUG 0
+
 /****************************************/
 /*************** BMP File ***************/
 /****************************************/
@@ -20,6 +22,11 @@ bmp_file open_bmp(const char *filename)
 
     // Open file
     bmp.photo = fopen(filename, "r+");
+
+#if DEBUG
+    printf("Sucessfully opened file.\n");
+#endif
+
     if (bmp.photo == NULL)
     {
         fprintf(stderr, "Photo not successfully opened.\n");
@@ -28,7 +35,6 @@ bmp_file open_bmp(const char *filename)
 
     // Set bitmap file header values
     checked_read(bmp.header.bitmap.id, sizeof(bmp.header.bitmap.id), 1, bmp.photo);
-
     if (strncmp(bmp.header.bitmap.id, "BM", 2))
     {
         fprintf(stderr, "Incorrect file type.\n");
@@ -53,7 +59,15 @@ bmp_file open_bmp(const char *filename)
     checked_read(&bmp.header.dib.num_colors, sizeof(bmp.header.dib.num_colors), 1, bmp.photo);
     checked_read(&bmp.header.dib.num_imp_colors, sizeof(bmp.header.dib.num_imp_colors), 1, bmp.photo);
 
+#if DEBUG
+    printf("Sucessfully opened stored the headers.\n");
+#endif
     return bmp;
+}
+
+void close_bmp(bmp_file bmp)
+{
+    fclose(bmp.photo);
 }
 
 void display_header(bmp_file bmp)
@@ -117,6 +131,57 @@ void reveal(bmp_file bmp)
 
         // End of row padding
         checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
+
+void hide(bmp_file target, bmp_file hidden)
+{
+    // Determine RGB Format
+    if (target.header.dib.bpp != 24 || hidden.header.dib.bpp != 24)
+    {
+        fprintf(stderr, "Program does not handle alternate color densities. Image must be 24 bpp.\n");
+        fprintf(stdout, "Photo not revealed.\n");
+        return;
+    }
+
+    // Make sure same size
+    if (target.header.dib.height != hidden.header.dib.height ||
+        target.header.dib.width != hidden.header.dib.width)
+    {
+        fprintf(stderr, "The two photos are not the same size. Images must be the same height and width.\n");
+        fprintf(stdout, "Photo not stored.\n");
+        return;
+    }
+
+    // Create a color structure
+    rgb target_color;
+    rgb hidden_color;
+
+    // Update the photo's colors
+    checked_seek(target.photo, target.header.bitmap.offset, SEEK_SET); // seek to colors
+    checked_seek(hidden.photo, hidden.header.bitmap.offset, SEEK_SET);
+
+    int padding = (sizeof(target_color) * target.header.dib.width) % 4; // Padding, align row to multiple of 4
+    for (int h = 0; h < target.header.dib.height; h++)                  // padding, height, and width are the same for each photo
+    {
+        for (int w = 0; w < target.header.dib.width; w++)
+        {
+            // Read the next color
+            checked_read(&target_color, sizeof(target_color.r), 3, target.photo);
+            checked_read(&hidden_color, sizeof(hidden_color.r), 3, hidden.photo);
+
+            // Swap bits of  color
+            target_color.r = combine_bits(target_color.r, hidden_color.r);
+            target_color.g = combine_bits(target_color.g, hidden_color.g);
+            target_color.b = combine_bits(target_color.b, hidden_color.b);
+
+            // Write to the photo
+            checked_seek(target.photo, -sizeof(target_color), SEEK_CUR);
+            fwrite(&target_color, sizeof(target_color), 1, target.photo);
+        }
+
+        // End of row padding
+        checked_seek(target.photo, padding, SEEK_CUR);
     }
 }
 
