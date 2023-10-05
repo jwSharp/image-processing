@@ -52,12 +52,21 @@ typedef struct
 bmp_file open_bmp(const char *filename);
 
 /**
+ * @brief Closes the bmp file.
+ * @param bmp bmp file to close
+ */
+void close_bmp(bmp_file bmp);
+
+/**
  * @brief Displays the BMP and DIB headers of a BMP file.
  * @details Takes a bmp photo and prints out the contents of the photo's header.
- * @param bmp A bmp photo containing header information.
+ * @param bmp a bmp photo
  */
 void display_header(bmp_file bmp);
 
+/*****************/
+/*** Alter BMP ***/
+/*****************/
 /**
  * @brief Reveals an photo hidden in the LSbs of an photo.
  * @details Alters the original photo by swapping its MSbs and LSbs and revealing the hidden photo.
