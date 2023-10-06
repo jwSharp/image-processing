@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include "stenography.h"
 
 /****************************************/
@@ -218,6 +219,48 @@ void invert(bmp_file bmp)
     }
 }
 
+void grayscale(bmp_file bmp)
+{
+    // Validate bits per pixel
+    if (!validate_bpp(bmp.header.dib.bpp))
+    {
+        fprintf(stdout, "Photo was not inverted.\n");
+        return;
+    }
+
+    // Update the photo's colors
+    rgb color;
+    checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // jump to pixel array
+    int padding = (sizeof(color) * bmp.header.dib.width) % 4;    // row padding aligns to multiple of 4
+    for (int h = 0; h < bmp.header.dib.height; h++)
+    {
+        for (int w = 0; w < bmp.header.dib.width; w++)
+        {
+            // Read the next color
+            checked_read(&color, sizeof(color.r), 3, bmp.photo);
+
+            // Linearize the normalized color
+            double r_lin = linearize(color.r);
+            double g_lin = linearize(color.g);
+            double b_lin = linearize(color.b);
+
+            // Calculate luminance
+            double luminance = 0.2126 * r_lin + 0.7152 * g_lin + 0.0722 * b_lin;
+
+            // Delinearize and set colors to grayscale
+            char gray_color = delinearize(luminance);
+            color.r = gray_color, color.g = gray_color, color.b = gray_color;
+
+            // Write to the photo
+            checked_seek(bmp.photo, -sizeof(color), SEEK_CUR);
+            fwrite(&color, sizeof(color), 1, bmp.photo);
+        }
+
+        // End of row padding
+        checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
+
 /****************************************/
 /*********** Bit Manipulation ***********/
 /****************************************/
@@ -252,6 +295,41 @@ char combine_bits(char color1, char color2)
 char invert_bits(char color)
 {
     return ~color;
+}
+
+/*****************************/
+/* Compression and Expansion */
+/*****************************/
+double linearize(char color)
+{
+    // Normalize, convert to the sRGB colorspace
+    double color_lin = (double)(color / 255.0);
+
+    // Linearize
+    if (color_lin <= 0.04045)
+    {
+        return color_lin / 12.92;
+    }
+    else
+    {
+        return pow((color_lin + 0.555) / 1.055, 2.4);
+    }
+}
+
+char delinearize(double color_lin)
+{
+    // Delinearize
+    if (color_lin <= 0.0031308)
+    {
+        color_lin *= 12.92;
+    }
+    else
+    {
+        color_lin = 1.055 * pow(color_lin, 1 / 2.4) - 0.055;
+    }
+
+    // Denormalize, convert to the RGB colorspace
+    return (char)(color_lin * 255);
 }
 
 /****************************************/

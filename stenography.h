@@ -109,7 +109,7 @@ void invert(bmp_file bmp);
  * @details
  * @param bmp A bmp photo to change to grayscale.
  */
-void grayscale_image(bmp_file bmp);
+void grayscale(bmp_file bmp);
 
 /**
  * @brief Flip a photo horizontally.
@@ -148,10 +148,28 @@ char combine_bits(char color1, char color2);
  */
 char invert_bits(char color);
 
+/*****************************/
+/* Compression and Expansion */
+/*****************************/
+/**
+ * @brief Linearize the color.
+ * @details Linearize using gamma expansion.
+ * @param color A single color.
+ * @return Returns the linearized sRGB value.
+ */
+double linearize(char color);
+
+/**
+ * @brief Delinearize a color.
+ * @details Delinearize using gamma compression the luminance, a weighted sum of the linearized RGB colors.
+ * @param color A single color, linearized and in sRGB colorspace.
+ * @return Returns the delinearized monochromat value.
+ */
+char delinearize(double color_lin);
+
 /*****************/
 /***** Files *****/
 /*****************/
-
 /**
  * @brief Performs fseek and writes to stderr upon failure.
  * @param file Pointer to the file stream.
