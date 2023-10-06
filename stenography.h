@@ -8,6 +8,9 @@
 
 #include <stdio.h>
 
+/**
+ * The contents of a bmp's bitmap header
+ */
 typedef struct
 {
     char id[2];
@@ -16,6 +19,9 @@ typedef struct
     int offset;
 } bitmap_file_header;
 
+/**
+ * The contents of a bmp's dib header
+ */
 typedef struct
 {
     int header_size, width, height;
@@ -23,18 +29,27 @@ typedef struct
     int scheme, img_size, hres, vres, num_colors, num_imp_colors;
 } dib_header;
 
+/**
+ * The header for a bmp file
+ */
 typedef struct
 {
     bitmap_file_header bitmap;
     dib_header dib;
 } bmp_header;
 
+/**
+ * BMP file and its header
+ */
 typedef struct
 {
     bmp_header header;
     FILE *photo;
 } bmp_file;
 
+/**
+ * Red/Green/Blue color
+ */
 typedef struct
 {
     char r, g, b;
@@ -93,14 +108,20 @@ void hflip_image(const char *in_filename);
 /********************/
 /**
  * @brief Swaps the most and least significant bits of a color.
- * @details Swaps the most significant bits with the
+ * @details Swaps the most significant bits with its least significant bits.
  * @param color A single color.
  * @return Returns a color with swapped bits.
  */
 char swap_bits(char color);
 
 /**
- * Use masks to combine the MSbs of two different photos.
+ * @brief Creates a color storing the most significant bits of both colors in the order of the parameters.
+ * @details Stores in a new color the most significant bits of two colors.
+ *          Takes the MSbs of color1 as the MSbs of the new color and
+ *          the MSbs of color2 as the LSbs of the new color.
+ * @param color1 This MSbs of this color are the MSbs of the new color.
+ * @param color2 This MSbs of this color are the LSbs of the new color.
+ * @return Returns a color with the MSbs of two colors, the MSbs of the new color reflect color1.
  */
 char combine_bits(char color1, char color2);
 
@@ -122,7 +143,7 @@ void checked_seek(FILE *file, long int offset, int whence);
  * @param __nitems Number of items to be read.
  * @param __stream File stream from which data is being read.
  */
-void checked_read(void *__restrict__ __ptr, size_t __size, size_t __nitems, FILE *__restrict__ __stream);
+void checked_read(void *restrict __ptr, size_t __size, size_t __nitems, FILE *restrict __stream);
 /**
  * @brief Performs fwrite and writes to stderr upon failure.
  * @param __ptr Pointer to where the data should be written.
