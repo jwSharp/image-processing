@@ -123,3 +123,11 @@ void checked_seek(FILE *file, long int offset, int whence);
  * @param __stream File stream from which data is being read.
  */
 void checked_read(void *__restrict__ __ptr, size_t __size, size_t __nitems, FILE *__restrict__ __stream);
+/**
+ * @brief Performs fwrite and writes to stderr upon failure.
+ * @param __ptr Pointer to where the data should be written.
+ * @param __size Size of the data.
+ * @param __nitems Number of items to be written.
+ * @param __stream File stream from which data is being written.
+ */
+void checked_write(void *restrict __ptr, size_t __size, size_t __nitems, FILE *restrict __stream);
