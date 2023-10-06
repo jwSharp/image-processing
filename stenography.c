@@ -211,7 +211,7 @@ char combine_bits(char color1, char color2)
 /****************************************/
 /**************** Files *****************/
 /****************************************/
-void checked_read(void *__restrict__ __ptr, size_t __size, size_t __nitems, FILE *__restrict__ __stream)
+void checked_read(void *restrict __ptr, size_t __size, size_t __nitems, FILE *restrict __stream)
 {
     int read = fread(__ptr, __size, __nitems, __stream);
     if ((int)read != __nitems)
@@ -223,6 +223,22 @@ void checked_read(void *__restrict__ __ptr, size_t __size, size_t __nitems, FILE
         else
         {
             fprintf(stderr, "Not all elements were read.\n");
+        }
+    }
+}
+
+void checked_write(void *restrict __ptr, size_t __size, size_t __nitems, FILE *restrict __stream)
+{
+    int written = fwrite(__ptr, __size, __nitems, __stream);
+    if ((int)written != __nitems)
+    {
+        if ((int)written == 0)
+        {
+            fprintf(stderr, "No elements were written.\n");
+        }
+        else
+        {
+            fprintf(stderr, "Not all elements were written.\n");
         }
     }
 }
