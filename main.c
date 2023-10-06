@@ -16,8 +16,8 @@ int main(int argc, char **argv)
   printf("Welcome to image stenography.\n");
   printf("Please select from the options below by typing the number of the operation you wish to perform:\n");
 
-  char filename[100], ftarget[100], fhidden[100];
-  bmp_file bmp, target, hidden;
+  char filename[100], fhost[100], fhidden[100];
+  bmp_file bmp, host, hidden;
   int choice;
 
   typedef int bool;
@@ -74,26 +74,32 @@ int main(int argc, char **argv)
       break;
 
     case 3:
-      // prompt for bmp files
+      // open host photo
+      printf("Enter the filename of the host bmp file which will hold the hidden photo.\n");
+      scanf("%s", &fhost);
+      host = open_bmp(fhost);
+      if (host.photo == NULL)
+      {
+        fprintf(stderr, "BMP file %s could not be properly opened.\n", fhost);
+        printf("Photo cannot be opened.\n");
+        continue;
+      }
+
+      // open hidden photo
       printf("Enter the filename of the bmp file that will be hidden.\n");
       scanf("%s", &fhidden);
-      printf("Enter the filename of the target bmp file which will hold the hidden photo.\n");
-      scanf("%s", &ftarget);
-
-      // open the photos
-      target = open_bmp(ftarget);
       hidden = open_bmp(fhidden);
-      if (target.photo == NULL || hidden.photo == NULL)
+      if (hidden.photo == NULL)
       {
-        fprintf(stderr, "BMP files could not be properly opened.\n");
-        printf("One of the files cannot be opened.\n");
+        fprintf(stderr, "BMP file %s could not be properly opened.\n", fhidden);
+        printf("Photo cannot be opened.\n");
         continue;
       }
 
       // hide the photo
-      hide(target, hidden);
+      hide(host, hidden);
 
-      close_bmp(target);
+      close_bmp(host);
       close_bmp(hidden);
       break;
 
