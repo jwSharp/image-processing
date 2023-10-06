@@ -27,14 +27,19 @@ bmp_file open_bmp(const char *filename)
         return bmp;
     }
 
-    // Set bitmap file header values
+    // check proper file type
     checked_read(bmp.header.bitmap.id, sizeof(bmp.header.bitmap.id), 1, bmp.photo);
     if (strncmp(bmp.header.bitmap.id, "BM", 2))
     {
         fprintf(stderr, "%s is the incorrect file type.\n", filename);
+
+        // close the file
+        close_bmp(bmp);
         bmp.photo = NULL;
         return bmp;
     }
+
+    // Set bitmap file header values
     checked_read(&bmp.header.bitmap.file_size, sizeof(bmp.header.bitmap.file_size), 1, bmp.photo);
     checked_read(&bmp.header.bitmap.reserved1, sizeof(bmp.header.bitmap.reserved1), 1, bmp.photo);
     checked_read(&bmp.header.bitmap.reserved2, sizeof(bmp.header.bitmap.reserved2), 1, bmp.photo);
