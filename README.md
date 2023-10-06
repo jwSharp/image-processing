@@ -8,6 +8,7 @@ This C-based repository is designed to hide one image inside another and reveal 
 
 - **Hide an Image**: Embed one image inside another with minimal noticeable visual alteration.
 - **Reveal an Image**: Extract the hidden image from the host image.
+- **Invert an Image**: Invert the hue of an image.
 
 ## Installation
 
@@ -28,23 +29,25 @@ make
 ### Hide an Image
 
 ```c
-// Path to host image and the image to be hidden
-char host_image_path[] = "host_image.jpg";
-char hidden_image_path[] = "hidden_image.jpg";
-
 // Function to hide the image
-hide_image(host_image_path, hidden_image_path);
+hide_image(host_image, hidden_image);
 ```
 
 ### Reveal an Image
 
 ```c
 // Function to reveal the hidden image
-reveal(host_image_path);
+reveal(host_image);
+```
+
+### Reveal an Image
+
+```c
+// Function to invert an image
+invert(target_image);
 ```
 
 ## Roadmap
 
-- [ ] **Invert Colors**: Function to invert the colors of an image.
 - [ ] **Grayscale**: Function to change an image to grayscale.
 - [ ] **Flip Image**: Function to flip an image horizontally or vertically.
