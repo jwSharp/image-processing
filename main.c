@@ -27,6 +27,7 @@ int main(int argc, char **argv)
     printf("\n1. Display Header\n");
     printf("2. Reveal Photo\n");
     printf("3. Hide Photo\n");
+    printf("4. Invert Photo\n");
     printf("Your Response:\t");
 
     scanf("%d", &choice);
@@ -101,6 +102,26 @@ int main(int argc, char **argv)
 
       close_bmp(host);
       close_bmp(hidden);
+      break;
+
+    case 4:
+      // prompt for bmp file
+      printf("Enter the filename of the bmp file.\n");
+      scanf("%s", &filename);
+
+      // open the photo
+      bmp = open_bmp(filename);
+      if (bmp.photo == NULL)
+      {
+        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+        printf("Photo cannot be opened.\n");
+        continue;
+      }
+
+      // invert the photo
+      invert(bmp);
+
+      close_bmp(bmp);
       break;
 
     default:
