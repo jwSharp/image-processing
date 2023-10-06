@@ -75,7 +75,7 @@ void close_bmp(bmp_file bmp);
 /**
  * @brief Displays the BMP and DIB headers of a BMP file.
  * @details Takes a bmp photo and prints out the contents of the photo's header.
- * @param bmp a bmp photo
+ * @param bmp A bmp photo
  */
 void display_header(bmp_file bmp);
 
@@ -97,11 +97,26 @@ void reveal(bmp_file bmp);
  */
 void hide(bmp_file target, bmp_file hidden);
 
+/**
+ * @brief Invert the pixels of an image.
+ * @details Flips the bits of each pixel to create a hue opposite of the original color.
+ * @param bmp A bmp photo to be inverted.
+ */
 void invert(bmp_file bmp);
 
-void grayscale_image(const char *in_filename);
+/**
+ * @brief Grayscale an image.
+ * @details
+ * @param bmp A bmp photo to change to grayscale.
+ */
+void grayscale_image(bmp_file bmp);
 
-void hflip_image(const char *in_filename);
+/**
+ * @brief Flip a photo horizontally.
+ * @details Flip a photo across the y-axis.
+ * @param bmp A bmp photo to flip.
+ */
+void hflip_image(bmp_file bmp);
 
 /********************/
 /* Bit Manipulation */
@@ -164,4 +179,8 @@ void checked_write(void *restrict __ptr, size_t __size, size_t __nitems, FILE *r
 /****************************************/
 /************** Validation **************/
 /****************************************/
+/**
+ * @brief Validate that the bits per pixel is 24.
+ * @param bmp The bits per pixel of a bmp image.
+ */
 int validate_bpp(int bpp);
