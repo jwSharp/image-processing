@@ -97,7 +97,7 @@ void reveal(bmp_file bmp);
  */
 void hide(bmp_file target, bmp_file hidden);
 
-void invert_image(const char *in_filename);
+void invert(bmp_file bmp);
 
 void grayscale_image(const char *in_filename);
 
@@ -124,6 +124,14 @@ char swap_bits(char color);
  * @return Returns a color with the MSbs of two colors, the MSbs of the new color reflect color1.
  */
 char combine_bits(char color1, char color2);
+
+/**
+ * @brief Inverts a color by flipping to opposite hue on the color wheel.
+ * @details Flips the bits of the given color.
+ * @param color A single color.
+ * @return Returns an inverted color with the complementing bit pattern.
+ */
+char invert_bits(char color);
 
 /*****************/
 /***** Files *****/
@@ -152,3 +160,8 @@ void checked_read(void *restrict __ptr, size_t __size, size_t __nitems, FILE *re
  * @param __stream File stream from which data is being written.
  */
 void checked_write(void *restrict __ptr, size_t __size, size_t __nitems, FILE *restrict __stream);
+
+/****************************************/
+/************** Validation **************/
+/****************************************/
+int validate_bpp(int bpp);

@@ -181,10 +181,46 @@ void hide(bmp_file host, bmp_file hidden)
     }
 }
 
+void invert(bmp_file bmp)
+{
+    // Validate bmp format
+    if (!validate_bpp(bmp.header.dib.bpp))
+    {
+        fprintf(stdout, "Photo was not inverted.\n");
+        return;
+    }
+
+    // Create a color structure
+    rgb color;
+
+    // Update the photo's colors
+    checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // jump to pixels
+    int padding = (sizeof(color) * bmp.header.dib.width) % 4;    // padding aligns row to multiple of 4
+    for (int h = 0; h < bmp.header.dib.height; h++)
+    {
+        for (int w = 0; w < bmp.header.dib.width; w++)
+        {
+            // Read the next color
+            checked_read(&color, sizeof(color.r), 3, bmp.photo);
+
+            // Invert the color
+            color.r = invert_bits(color.r);
+            color.g = invert_bits(color.g);
+            color.b = invert_bits(color.b);
+
+            // Write to the photo
+            checked_seek(bmp.photo, -sizeof(color), SEEK_CUR);
+            fwrite(&color, sizeof(color), 1, bmp.photo);
+        }
+
+        // End of row padding
+        checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
+
 /****************************************/
 /*********** Bit Manipulation ***********/
 /****************************************/
-
 char swap_bits(char color)
 {
     unsigned char msb, lsb, temp; // avoid signed ext
@@ -211,6 +247,11 @@ char combine_bits(char color1, char color2)
     // combine colors
     lsb = lsb >> 4;
     return msb | lsb;
+}
+
+char invert_bits(char color)
+{
+    return ~color;
 }
 
 /****************************************/
@@ -263,4 +304,18 @@ void checked_seek(FILE *file, long int offset, int whence)
             fprintf(stderr, "Failed to seek from %i backwards %ld", temp_whence, offset);
         }
     }
+}
+
+/****************************************/
+/************** Validation **************/
+/****************************************/
+int validate_bpp(int bpp)
+{
+    if (bpp != 24)
+    {
+        fprintf(stderr, "Program does not handle alternate color densities. Image must be 24 bpp.\n");
+        fprintf(stdout, "Photo has an invalid color density.\n");
+        return 0;
+    }
+    return 1;
 }
