@@ -13,35 +13,35 @@ This C-based repository is designed to hide one image inside another and reveal 
 
 Clone this repository and navigate into the directory:
 
-\`\`\`bash
+```bash
 git clone https://github.com/jwsharp/image_stenography.git
-\`\`\`
+```
 
 Compile the source code:
 
-\`\`\`bash
+```bash
 make
-\`\`\`
+```
 
 ## Usage
 
 ### Hide an Image
 
-\`\`\`c
+```c
 // Path to host image and the image to be hidden
 char host_image_path[] = "host_image.jpg";
 char hidden_image_path[] = "hidden_image.jpg";
 
 // Function to hide the image
 hide_image(host_image_path, hidden_image_path);
-\`\`\`
+```
 
 ### Reveal an Image
 
-\`\`\`c
+```c
 // Function to reveal the hidden image
 reveal(host_image_path);
-\`\`\`
+```
 
 ## Roadmap
 
