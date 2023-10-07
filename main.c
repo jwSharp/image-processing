@@ -28,6 +28,8 @@ int main(int argc, char **argv)
     printf("2. Reveal Photo\n");
     printf("3. Hide Photo\n");
     printf("4. Invert Photo\n");
+    printf("6. Flip Photo\n");
+    printf("7. Mirror Photo\n");
     printf("Your Response:\t");
 
     scanf("%d", &choice);
@@ -120,6 +122,46 @@ int main(int argc, char **argv)
 
       // invert the photo
       invert(bmp);
+
+      close_bmp(bmp);
+      break;
+
+    case 6:
+      // prompt for bmp file
+      printf("Enter the filename of the bmp file.\n");
+      scanf("%s", &filename);
+
+      // open the photo
+      bmp = open_bmp(filename);
+      if (bmp.photo == NULL)
+      {
+        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+        printf("Photo cannot be opened.\n");
+        continue;
+      }
+
+      // horizontally flip the photo
+      hflip_image(bmp);
+
+      close_bmp(bmp);
+      break;
+
+    case 7:
+      // prompt for bmp file
+      printf("Enter the filename of the bmp file.\n");
+      scanf("%s", &filename);
+
+      // open the photo
+      bmp = open_bmp(filename);
+      if (bmp.photo == NULL)
+      {
+        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+        printf("Photo cannot be opened.\n");
+        continue;
+      }
+
+      // mirror the photo down the center
+      mirror(bmp);
 
       close_bmp(bmp);
       break;
