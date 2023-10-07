@@ -136,6 +136,13 @@ void mirror(bmp_file bmp);
 void swap(rgb *color1, rgb *color2);
 
 /**
+ * @brief Copies the values of the first color to the second color.
+ * @param color1 A pointer to the first color.
+ * @param color2 A pointer to the second color.
+ */
+void copy(rgb *color1, rgb *color2);
+
+/**
  * @brief Swaps the most and least significant bits of a color.
  * @details Swaps the most significant bits with its least significant bits.
  * @param color A single color.

@@ -218,6 +218,42 @@ void invert(bmp_file bmp)
     }
 }
 
+void hflip_image(bmp_file bmp)
+{
+    // Validate bmp format
+    if (!validate_bpp(bmp.header.dib.bpp))
+    {
+        fprintf(stdout, "Photo was not flipped.\n");
+        return;
+    }
+
+    checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // jump to pixels
+    int row_size = bmp.header.dib.width * sizeof(rgb);
+    rgb row[bmp.header.dib.width];
+    int padding = row_size % 4; // padding aligns row to multiple of 4
+
+    for (int h = 0; h < bmp.header.dib.height; h++)
+    {
+        // Store the entire row
+        checked_read(row, sizeof(rgb), bmp.header.dib.width, bmp.photo);
+
+        // Swap the colors
+        for (int w = 0; w < bmp.header.dib.width / 2; w++)
+        {
+            printf("Before Swap: %d %d %d - %d %d %d\n", row[w].r, row[w].g, row[w].b, row[bmp.header.dib.width - w - 1].r, row[bmp.header.dib.width - w - 1].g, row[bmp.header.dib.width - w - 1].b);
+            swap(&row[w], &row[bmp.header.dib.width - w - 1]);
+            printf("After Swap: %d %d %d - %d %d %d\n", row[w].r, row[w].g, row[w].b, row[bmp.header.dib.width - w - 1].r, row[bmp.header.dib.width - w - 1].g, row[bmp.header.dib.width - w - 1].b);
+        }
+
+        // Write to the photo
+        checked_seek(bmp.photo, -row_size, SEEK_CUR);
+        fwrite(&row, row_size, 1, bmp.photo);
+
+        // Add the end of row padding
+        checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
+
 void mirror(bmp_file bmp)
 {
     // Validate bmp format
@@ -240,7 +276,7 @@ void mirror(bmp_file bmp)
         // Copy the colors
         for (int w = 0; w < bmp.header.dib.width / 2; w++)
         {
-            swap(&row[w], &row[bmp.header.dib.width - w]);
+            copy(&row[w], &row[bmp.header.dib.width - w - 1]);
         }
 
         // Write to the photo
@@ -257,10 +293,14 @@ void mirror(bmp_file bmp)
 /****************************************/
 void swap(rgb *color1, rgb *color2)
 {
-    rgb temp;
-    temp = *color1;
+    rgb temp = *color1;
+    *color1 = *color2;
+    *color2 = temp;
+}
+
+void copy(rgb *color1, rgb *color2)
+{
     *color2 = *color1;
-    *color1 = temp;
 }
 
 char swap_bits(char color)
