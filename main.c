@@ -36,7 +36,7 @@ int main(int argc, char **argv)
         {
         case 1:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of a bmp file located in the images folder.\n");
+            bmp = prompt_photo("Enter the filepath of a bmp file located in the images folder.\n");
 
             // display the bmp's header
             display_header(bmp);
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
 
         case 2:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+            bmp = prompt_photo("Enter the filepath of the bmp file.\n");
 
             // reveal the hidden photo
             reveal(bmp);
@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
         case 3:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+            bmp = prompt_photo("Enter the filepath of the bmp file.\n");
 
             // show both the hidden and original photo
             peek(bmp);
@@ -69,8 +69,8 @@ int main(int argc, char **argv)
 
         case 4:
             // open host and hidden photos
-            host = prompt_photo("Enter the filename of the host bmp file which will hold the hidden photo.\n");
-            hidden = prompt_photo("Enter the filename of the bmp file that will be hidden.\n");
+            host = prompt_photo("Enter the filepath of the host bmp file which will hold the hidden photo.\n");
+            hidden = prompt_photo("Enter the filepath of the bmp file that will be hidden.\n");
 
             // hide the photo
             hide(host, hidden);
@@ -82,7 +82,7 @@ int main(int argc, char **argv)
 
         case 5:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+            bmp = prompt_photo("Enter the filepath of the bmp file.\n");
 
             // invert the photo
             invert(bmp);
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
 
         case 6:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+            bmp = prompt_photo("Enter the filepath of the bmp file.\n");
 
             // turn the photo to grayscale
             grayscale(bmp);
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 
         case 7:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+            bmp = prompt_photo("Enter the filepath of the bmp file.\n");
 
             // horizontally flip the photo
             hflip_image(bmp);
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 
         case 8:
             // prompt for bmp file
-            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+            bmp = prompt_photo("Enter the filepath of the bmp file.\n");
 
             // mirror the photo down the center
             mirror(bmp);
