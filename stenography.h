@@ -18,7 +18,6 @@ typedef struct
     short reserved1, reserved2;
     int offset;
 } bitmap_file_header;
-
 /**
  * The contents of a bmp's dib header
  */
@@ -28,7 +27,6 @@ typedef struct
     short planes, bpp;
     int scheme, img_size, hres, vres, num_colors, num_imp_colors;
 } dib_header;
-
 /**
  * The header for a bmp file
  */
@@ -37,7 +35,6 @@ typedef struct
     bitmap_file_header bitmap;
     dib_header dib;
 } bmp_header;
-
 /**
  * BMP file and its header
  */
@@ -46,7 +43,6 @@ typedef struct
     bmp_header header;
     FILE *photo;
 } bmp_file;
-
 /**
  * Red/Green/Blue color
  */
@@ -62,16 +58,14 @@ typedef struct
  * @brief Stores a bmp photo in the bmp_file structure.
  * @param filename The name of the bmp file.
  * @return Returns a bmp_file structure created from the photo.
- * @note bmp.photo set to NULL when filename is invalid.
+ *          bmp.photo set to NULL when incompatible file.
  */
 bmp_file open_bmp(const char *filename);
-
 /**
  * @brief Closes the bmp file.
  * @param bmp bmp file to close
  */
 void close_bmp(bmp_file bmp);
-
 /**
  * @brief Displays the BMP and DIB headers of a BMP file.
  * @details Takes a bmp photo and prints out the contents of the photo's header.
@@ -88,7 +82,12 @@ void display_header(bmp_file bmp);
  * @param bmp bmp photo containing a hidden photo.
  */
 void reveal(bmp_file bmp);
-
+/**
+ * @brief Reveals a hidden photo hidden while still showing the original.
+ * @details Alters the original photo by swapping some of its MSbs and LSbs and partially revealing the hidden photo.
+ * @param bmp bmp photo containing a hidden photo.
+ */
+void peek(bmp_file bmp);
 /**
  * @brief Hides one photo inside of another photo.
  * @details Stores the MSbs of the hidden photo as the LSbs of the target photo.
@@ -96,28 +95,24 @@ void reveal(bmp_file bmp);
  * @param hidden bmp photo to hide inside of the target photo
  */
 void hide(bmp_file target, bmp_file hidden);
-
 /**
  * @brief Invert the pixels of an image.
  * @details Flips the bits of each pixel to create a hue opposite of the original color.
  * @param bmp A bmp photo to be inverted.
  */
 void invert(bmp_file bmp);
-
 /**
  * @brief Grayscale an image.
  * @details
  * @param bmp A bmp photo to change to grayscale.
  */
 void grayscale(bmp_file bmp);
-
 /**
  * @brief Flip a photo horizontally.
  * @details Flip a photo across the y-axis.
  * @param bmp A bmp photo to flip.
  */
 void hflip_image(bmp_file bmp);
-
 /**
  * @brief Mirror a photo down the center copyint the left side to the right.
  * @details Copy the left side of the photo to the right side but horizontally flipped.
@@ -134,14 +129,12 @@ void mirror(bmp_file bmp);
  * @param color2 A pointer to the second color.
  */
 void swap(rgb *color1, rgb *color2);
-
 /**
  * @brief Copies the values of the first color to the second color.
  * @param color1 A pointer to the first color.
  * @param color2 A pointer to the second color.
  */
 void copy(rgb *color1, rgb *color2);
-
 /**
  * @brief Swaps the most and least significant bits of a color.
  * @details Swaps the most significant bits with its least significant bits.
@@ -149,7 +142,6 @@ void copy(rgb *color1, rgb *color2);
  * @return Returns a color with swapped bits.
  */
 char swap_bits(char color);
-
 /**
  * @brief Creates a color storing the most significant bits of both colors in the order of the parameters.
  * @details Stores in a new color the most significant bits of two colors.
@@ -160,7 +152,6 @@ char swap_bits(char color);
  * @return Returns a color with the MSbs of two colors, the MSbs of the new color reflect color1.
  */
 char combine_bits(char color1, char color2);
-
 /**
  * @brief Inverts a color by flipping to opposite hue on the color wheel.
  * @details Flips the bits of the given color.
@@ -179,7 +170,6 @@ char invert_bits(char color);
  * @return Returns the linearized sRGB value.
  */
 double linearize(char color);
-
 /**
  * @brief Delinearize a color.
  * @details Delinearize using gamma compression the luminance, a weighted sum of the linearized RGB colors.

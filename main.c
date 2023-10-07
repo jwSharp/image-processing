@@ -57,6 +57,17 @@ int main(int argc, char **argv)
             break;
 
         case 3:
+            // prompt for bmp file
+            bmp = prompt_photo("Enter the filename of the bmp file.\n");
+
+            // show both the hidden and original photo
+            peek(bmp);
+
+            // close file
+            close_bmp(bmp);
+            break;
+
+        case 4:
             // open host and hidden photos
             host = prompt_photo("Enter the filename of the host bmp file which will hold the hidden photo.\n");
             hidden = prompt_photo("Enter the filename of the bmp file that will be hidden.\n");
@@ -69,7 +80,7 @@ int main(int argc, char **argv)
             close_bmp(hidden);
             break;
 
-        case 4:
+        case 5:
             // prompt for bmp file
             bmp = prompt_photo("Enter the filename of the bmp file.\n");
 
@@ -80,7 +91,7 @@ int main(int argc, char **argv)
             close_bmp(bmp);
             break;
 
-        case 5:
+        case 6:
             // prompt for bmp file
             bmp = prompt_photo("Enter the filename of the bmp file.\n");
 
@@ -93,7 +104,7 @@ int main(int argc, char **argv)
             close_bmp(bmp);
             break;
 
-        case 6:
+        case 7:
             // prompt for bmp file
             bmp = prompt_photo("Enter the filename of the bmp file.\n");
 
@@ -103,7 +114,7 @@ int main(int argc, char **argv)
             close_bmp(bmp);
             break;
 
-        case 7:
+        case 8:
             // prompt for bmp file
             bmp = prompt_photo("Enter the filename of the bmp file.\n");
 
