@@ -22,11 +22,12 @@ int main(int argc, char **argv)
     {
         printf("\n1. Display Header\n");
         printf("2. Reveal Photo\n");
-        printf("3. Hide Photo\n");
-        printf("4. Invert Photo\n");
-        printf("5. Grayscale Photo\n");
-        printf("6. Flip Photo\n");
-        printf("7. Mirror Photo\n");
+        printf("3. Peek Hidden Photo\n");
+        printf("4. Hide Photo\n");
+        printf("5. Invert Photo\n");
+        printf("6. Grayscale Photo\n");
+        printf("7. Flip Photo\n");
+        printf("8. Mirror Photo\n");
         printf("Your Response:\t");
 
         scanf("%1d", &choice);
