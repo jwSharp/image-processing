@@ -13,198 +13,198 @@
  */
 int main(int argc, char **argv)
 {
-  printf("Welcome to image stenography.\n");
-  printf("Please select from the options below by typing the number of the operation you wish to perform:\n");
+    printf("Welcome to image stenography.\n");
+    printf("Please select from the options below by typing the number of the operation you wish to perform:\n");
 
-  char filename[100], fhost[100], fhidden[100];
-  bmp_file bmp, host, hidden;
-  int choice;
+    char filename[100], fhost[100], fhidden[100];
+    bmp_file bmp, host, hidden;
+    int choice;
 
-  typedef int bool;
-  bool flag = 1;
-  while (flag)
-  {
-    printf("\n1. Display Header\n");
-    printf("2. Reveal Photo\n");
-    printf("3. Hide Photo\n");
-    printf("4. Invert Photo\n");
-    printf("5. Grayscale Photo\n");
-    printf("6. Flip Photo\n");
-    printf("7. Mirror Photo\n");
-    printf("Your Response:\t");
-
-    scanf("%d", &choice);
-    printf("\n");
-
-    switch (choice)
+    typedef int bool;
+    bool flag = 1;
+    while (flag)
     {
-    case 1:
-      // prompt for bmp file
-      printf("Enter the filename of the bmp file.\n");
-      scanf("%s", &filename);
+        printf("\n1. Display Header\n");
+        printf("2. Reveal Photo\n");
+        printf("3. Hide Photo\n");
+        printf("4. Invert Photo\n");
+        printf("5. Grayscale Photo\n");
+        printf("6. Flip Photo\n");
+        printf("7. Mirror Photo\n");
+        printf("Your Response:\t");
 
-      // open the photo
-      bmp = open_bmp(filename);
-      if (bmp.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+        scanf("%d", &choice);
+        printf("\n");
 
-      display_header(bmp);
+        switch (choice)
+        {
+        case 1:
+            // prompt for bmp file
+            printf("Enter the filename of the bmp file.\n");
+            scanf("%s", &filename);
 
-      close_bmp(bmp);
-      break;
+            // open the photo
+            bmp = open_bmp(filename);
+            if (bmp.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-    case 2:
-      // prompt for bmp file
-      printf("Enter the filename of the bmp file.\n");
-      scanf("%s", &filename);
+            display_header(bmp);
 
-      // open the photo
-      bmp = open_bmp(filename);
-      if (bmp.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            close_bmp(bmp);
+            break;
 
-      // reveal the hidden photo
-      reveal(bmp);
+        case 2:
+            // prompt for bmp file
+            printf("Enter the filename of the bmp file.\n");
+            scanf("%s", &filename);
 
-      close_bmp(bmp);
-      break;
+            // open the photo
+            bmp = open_bmp(filename);
+            if (bmp.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-    case 3:
-      // open host photo
-      printf("Enter the filename of the host bmp file which will hold the hidden photo.\n");
-      scanf("%s", &fhost);
-      host = open_bmp(fhost);
-      if (host.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", fhost);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            // reveal the hidden photo
+            reveal(bmp);
 
-      // open hidden photo
-      printf("Enter the filename of the bmp file that will be hidden.\n");
-      scanf("%s", &fhidden);
-      hidden = open_bmp(fhidden);
-      if (hidden.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", fhidden);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            close_bmp(bmp);
+            break;
 
-      // hide the photo
-      hide(host, hidden);
+        case 3:
+            // open host photo
+            printf("Enter the filename of the host bmp file which will hold the hidden photo.\n");
+            scanf("%s", &fhost);
+            host = open_bmp(fhost);
+            if (host.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", fhost);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-      close_bmp(host);
-      close_bmp(hidden);
-      break;
+            // open hidden photo
+            printf("Enter the filename of the bmp file that will be hidden.\n");
+            scanf("%s", &fhidden);
+            hidden = open_bmp(fhidden);
+            if (hidden.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", fhidden);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-    case 4:
-      // prompt for bmp file
-      printf("Enter the filename of the bmp file.\n");
-      scanf("%s", &filename);
+            // hide the photo
+            hide(host, hidden);
 
-      // open the photo
-      bmp = open_bmp(filename);
-      if (bmp.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            close_bmp(host);
+            close_bmp(hidden);
+            break;
 
-      // invert the photo
-      invert(bmp);
+        case 4:
+            // prompt for bmp file
+            printf("Enter the filename of the bmp file.\n");
+            scanf("%s", &filename);
 
-      close_bmp(bmp);
-      break;
+            // open the photo
+            bmp = open_bmp(filename);
+            if (bmp.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-    case 5:
-      // prompt for bmp file
-      printf("Enter the filename of the bmp file.\n");
-      scanf("%s", &filename);
+            // invert the photo
+            invert(bmp);
 
-      // open the photo
-      bmp = open_bmp(filename);
-      if (bmp.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            close_bmp(bmp);
+            break;
 
-      // turn the photo to grayscale
-      grayscale(bmp);
+        case 5:
+            // prompt for bmp file
+            printf("Enter the filename of the bmp file.\n");
+            scanf("%s", &filename);
 
-      // horizontally flip the photo
-      hflip_image(bmp);
+            // open the photo
+            bmp = open_bmp(filename);
+            if (bmp.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-      close_bmp(bmp);
-      break;
+            // turn the photo to grayscale
+            grayscale(bmp);
 
-    case 6:
-      // prompt for bmp file
-      printf("Enter the filename of the bmp file.\n");
-      scanf("%s", &filename);
+            // horizontally flip the photo
+            hflip_image(bmp);
 
-      // open the photo
-      bmp = open_bmp(filename);
-      if (bmp.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            close_bmp(bmp);
+            break;
 
-      // horizontally flip the photo
-      hflip_image(bmp);
+        case 6:
+            // prompt for bmp file
+            printf("Enter the filename of the bmp file.\n");
+            scanf("%s", &filename);
 
-      close_bmp(bmp);
-      break;
+            // open the photo
+            bmp = open_bmp(filename);
+            if (bmp.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-    case 7:
-      // prompt for bmp file
-      printf("Enter the filename of the bmp file.\n");
-      scanf("%s", &filename);
+            // horizontally flip the photo
+            hflip_image(bmp);
 
-      // open the photo
-      bmp = open_bmp(filename);
-      if (bmp.photo == NULL)
-      {
-        fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
-        printf("Photo cannot be opened.\n");
-        continue;
-      }
+            close_bmp(bmp);
+            break;
 
-      // mirror the photo down the center
-      mirror(bmp);
+        case 7:
+            // prompt for bmp file
+            printf("Enter the filename of the bmp file.\n");
+            scanf("%s", &filename);
 
-      close_bmp(bmp);
-      break;
+            // open the photo
+            bmp = open_bmp(filename);
+            if (bmp.photo == NULL)
+            {
+                fprintf(stderr, "BMP file %s could not be properly opened.\n", filename);
+                printf("Photo cannot be opened.\n");
+                continue;
+            }
 
-    default:
-      printf("This is an invalid option.\n");
-      break;
+            // mirror the photo down the center
+            mirror(bmp);
+
+            close_bmp(bmp);
+            break;
+
+        default:
+            printf("This is an invalid option.\n");
+            break;
+        }
+
+        // prompt for another operation
+        printf("Would you like to perform another operation?\n");
+        printf("Type 1 if you wish to do another operation or 0 if not.\n");
+        scanf("%d", &flag);
+        if (flag != 1)
+        {
+            flag = 0;
+        }
     }
 
-    // prompt for another operation
-    printf("Would you like to perform another operation?\n");
-    printf("Type 1 if you wish to do another operation or 0 if not.\n");
-    scanf("%d", &flag);
-    if (flag != 1)
-    {
-      flag = 0;
-    }
-  }
-
-  printf("\n\nThank you for using image stenography.");
-  return 0;
+    printf("\n\nThank you for using image stenography.");
+    return 0;
 }
