@@ -3,6 +3,17 @@ import os
 
 def process_image(input_path, new_width, new_height):
     try:
+        # Remove metadata
+        with Image.open(input_path) as img:
+            data = list(img.getdata())
+            img_without_exif = Image.new(img.mode, img.size)
+            img_without_exif.putdata(data)
+
+            # Overwrite the original image
+            os.remove(input_path)
+            img_without_exif.save(input_path)
+            print(f"The metadata has been removed from {input_path}")
+
         # Convert and resize image to 24bpp BMP
         with Image.open(input_path) as img:
             img = img.convert('RGB')  # Convert image to RGB mode
