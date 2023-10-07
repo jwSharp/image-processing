@@ -257,6 +257,9 @@ void grayscale(bmp_file bmp)
         }
 
         // End of row padding
+        checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
 
 void hflip_image(bmp_file bmp)
 {
