@@ -107,13 +107,13 @@ void reveal(bmp_file bmp)
 
     // Update the photo's colors
     checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // seek to colors
-    int padding = (sizeof(color) * bmp.header.dib.width) % 4;    // Padding, align row to multiple of 4
+    int padding = (sizeof(rgb) * bmp.header.dib.width) % 4;      // Padding, align row to multiple of 4
     for (int h = 0; h < bmp.header.dib.height; h++)
     {
         for (int w = 0; w < bmp.header.dib.width; w++)
         {
             // Read the next color
-            checked_read(&color, sizeof(color.r), 3, bmp.photo);
+            checked_read(&color, sizeof(rgb), 3, bmp.photo);
 
             // Swap bits of the color
             color.r = swap_bits(color.r);
@@ -121,8 +121,8 @@ void reveal(bmp_file bmp)
             color.b = swap_bits(color.b);
 
             // Write to the photo
-            checked_seek(bmp.photo, -sizeof(color), SEEK_CUR);
-            fwrite(&color, sizeof(color), 1, bmp.photo);
+            checked_seek(bmp.photo, -sizeof(rgb), SEEK_CUR);
+            fwrite(&color, sizeof(rgb), 1, bmp.photo);
         }
 
         // End of row padding
@@ -195,7 +195,7 @@ void invert(bmp_file bmp)
 
     // Update the photo's colors
     checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // jump to pixels
-    int padding = (sizeof(color) * bmp.header.dib.width) % 4;    // padding aligns row to multiple of 4
+    int padding = (sizeof(rgb) * bmp.header.dib.width) % 4;      // padding aligns row to multiple of 4
     for (int h = 0; h < bmp.header.dib.height; h++)
     {
         for (int w = 0; w < bmp.header.dib.width; w++)
@@ -209,8 +209,8 @@ void invert(bmp_file bmp)
             color.b = invert_bits(color.b);
 
             // Write to the photo
-            checked_seek(bmp.photo, -sizeof(color), SEEK_CUR);
-            fwrite(&color, sizeof(color), 1, bmp.photo);
+            checked_seek(bmp.photo, -sizeof(rgb), SEEK_CUR);
+            fwrite(&color, sizeof(rgb), 1, bmp.photo);
         }
 
         // End of row padding
@@ -218,9 +218,51 @@ void invert(bmp_file bmp)
     }
 }
 
+void mirror(bmp_file bmp)
+{
+    // Validate bmp format
+    if (!validate_bpp(bmp.header.dib.bpp))
+    {
+        fprintf(stdout, "Photo was not flipped.\n");
+        return;
+    }
+
+    checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // jump to pixels
+    int row_size = bmp.header.dib.width * sizeof(rgb);
+    rgb row[bmp.header.dib.width];
+    int padding = row_size % 4; // padding aligns row to multiple of 4
+
+    for (int h = 0; h < bmp.header.dib.height; h++)
+    {
+        // Store the entire row
+        checked_read(row, sizeof(rgb), bmp.header.dib.width, bmp.photo);
+
+        // Copy the colors
+        for (int w = 0; w < bmp.header.dib.width / 2; w++)
+        {
+            swap(&row[w], &row[bmp.header.dib.width - w]);
+        }
+
+        // Write to the photo
+        checked_seek(bmp.photo, -row_size, SEEK_CUR);
+        fwrite(&row, row_size, 1, bmp.photo);
+
+        // Add the end of row padding
+        checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
+
 /****************************************/
 /*********** Bit Manipulation ***********/
 /****************************************/
+void swap(rgb *color1, rgb *color2)
+{
+    rgb temp;
+    temp = *color1;
+    *color2 = *color1;
+    *color1 = temp;
+}
+
 char swap_bits(char color)
 {
     unsigned char msb, lsb, temp; // avoid signed ext

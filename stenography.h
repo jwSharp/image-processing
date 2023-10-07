@@ -118,9 +118,23 @@ void grayscale_image(bmp_file bmp);
  */
 void hflip_image(bmp_file bmp);
 
+/**
+ * @brief Mirror a photo down the center copyint the left side to the right.
+ * @details Copy the left side of the photo to the right side but horizontally flipped.
+ * @param bmp A bmp photo to mirror.
+ */
+void mirror(bmp_file bmp);
+
 /********************/
 /* Bit Manipulation */
 /********************/
+/**
+ * @brief Swap the values of two colors.
+ * @param color1 A pointer to the first color.
+ * @param color2 A pointer to the second color.
+ */
+void swap(rgb *color1, rgb *color2);
+
 /**
  * @brief Swaps the most and least significant bits of a color.
  * @details Swaps the most significant bits with its least significant bits.
