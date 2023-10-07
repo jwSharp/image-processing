@@ -94,7 +94,6 @@ void display_header(bmp_file bmp)
 
 void reveal(bmp_file bmp)
 {
-
     // Determine RGB Format
     if (bmp.header.dib.bpp != 24)
     {
@@ -114,7 +113,45 @@ void reveal(bmp_file bmp)
         for (int w = 0; w < bmp.header.dib.width; w++)
         {
             // Read the next color
-            checked_read(&color, sizeof(rgb), 3, bmp.photo);
+            checked_read(&color, sizeof(color.r), 3, bmp.photo);
+
+            // Swap bits of the color
+            color.r = swap_bits(color.r);
+            color.g = swap_bits(color.g);
+            color.b = swap_bits(color.b);
+
+            // Write to the photo
+            checked_seek(bmp.photo, -sizeof(rgb), SEEK_CUR);
+            fwrite(&color, sizeof(rgb), 1, bmp.photo);
+        }
+
+        // End of row padding
+        checked_seek(bmp.photo, padding, SEEK_CUR);
+    }
+}
+
+void peek(bmp_file bmp)
+{
+    // Determine RGB Format
+    if (bmp.header.dib.bpp != 24)
+    {
+        fprintf(stderr, "Program does not handle alternate color densities. Image must be 24 bpp.\n");
+        fprintf(stdout, "Photo not revealed.\n");
+        return;
+    }
+
+    // Create a color structure
+    rgb color;
+
+    // Update the photo's colors
+    checked_seek(bmp.photo, bmp.header.bitmap.offset, SEEK_SET); // seek to colors
+    int padding = (sizeof(rgb) * bmp.header.dib.width) % 4;      // Padding, align row to multiple of 4
+    for (int h = 0; h < bmp.header.dib.height; h++)
+    {
+        for (int w = 0; w < bmp.header.dib.width; w++)
+        {
+            // Read the next color
+            checked_read(&color, sizeof(color), 3, bmp.photo);
 
             // Swap bits of the color
             color.r = swap_bits(color.r);

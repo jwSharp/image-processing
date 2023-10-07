@@ -2,7 +2,7 @@
 # compiler and its flags
 CC = gcc
 CFLAGS = -Wall -g
-TARGET = main
+TARGET = exe
 
 # run the program
 all: compile link run
