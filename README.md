@@ -20,9 +20,11 @@ Operations correspond to a function in the C program. Consult the documentation 
 
 ## Usage
 
-1. Run `make all` to compile and execute the Python script and C program.
+1. Run `make all` to compile and execute the Python script and C program. (See below how to execute each individually).
 2. In the Python script, follow the prompts to process your images or type "no" to the first prompt to end.
 3. In the C program, choose from the menu options to perform various image manipulation operations.
+
+_Optional_: Add your own images to the images folder to run the Python script.
 
 ## Makefile
 
