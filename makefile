@@ -46,3 +46,4 @@ clean-c:
 
 clean-python:
 	-pipenv --rm
+	-rm -f Pipfile.lock
