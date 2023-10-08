@@ -1,3 +1,5 @@
+# author: Jacob Sharp
+
 from PIL import Image
 import os
 
