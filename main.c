@@ -99,9 +99,6 @@ int main(int argc, char **argv)
             // turn the photo to grayscale
             grayscale(bmp);
 
-            // horizontally flip the photo
-            hflip_image(bmp);
-
             close_bmp(bmp);
             break;
 
