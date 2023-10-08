@@ -6,12 +6,12 @@ def process_image(input_path, new_width, new_height):
         # Remove metadata
         with Image.open(input_path) as img:
             data = list(img.getdata())
-            img_without_exif = Image.new(img.mode, img.size)
-            img_without_exif.putdata(data)
+            img_no_meta = Image.new(img.mode, img.size)
+            img_no_meta.putdata(data)
 
             # Overwrite the original image
             os.remove(input_path)
-            img_without_exif.save(input_path)
+            img_no_meta.save(input_path)
             print(f"The metadata has been removed from {input_path}")
 
         # Convert and resize image to 24bpp BMP
@@ -19,7 +19,7 @@ def process_image(input_path, new_width, new_height):
             img = img.convert('RGB')  # Convert image to RGB mode
 
             # Resize the image to fit within the specified dimensions while maintaining aspect ratio
-            img.thumbnail((new_width + new_width/3, new_height + new_width/3))
+            img.thumbnail((new_width, new_height))
 
             # Calculate the coordinates of the cropped area
             left = (img.width - new_width) / 2
@@ -38,9 +38,12 @@ def process_image(input_path, new_width, new_height):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# Specify the dimensions to resize
-new_width = 900
-new_height = 900
+while True:
+    choice = input("Do you want to process an image? (yes/no): ").lower().strip()
+    if choice != 'yes':
+        break
+    
+    input_path = input("Enter the path of the image: ")
+    output_path = input_path.rsplit('.', 1)[0] + '.bmp'
 
-# Test the function with your actual image path
-process_image('goat.jpg', new_width, new_height)
+    process_image(input_path, 900, 900)
