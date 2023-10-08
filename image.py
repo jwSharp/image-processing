@@ -21,7 +21,7 @@ def process_image(input_path, new_width, new_height):
             img = img.convert('RGB')  # Convert image to RGB mode
 
             # Resize the image to fit within the specified dimensions while maintaining aspect ratio
-            img.thumbnail((new_width, new_height))
+            img.thumbnail((new_width + new_width/3, new_height + new_height/3))
 
             # Calculate the coordinates of the cropped area
             left = (img.width - new_width) / 2
@@ -44,7 +44,7 @@ while True:
     choice = input("Do you want to process an image? (yes/no): ").lower().strip()
     if choice != 'yes':
         break
-    
+
     input_path = input("Enter the path of the image: ")
     output_path = input_path.rsplit('.', 1)[0] + '.bmp'
 
