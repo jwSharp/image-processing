@@ -12,7 +12,7 @@ bmp_file prompt_photo(char *prompt);
 
 int main(int argc, char **argv)
 {
-    printf("Welcome to image stenography.\n");
+    printf("\n\nWelcome to image stenography.\n");
     printf("Please select from the options below by typing the number of the operation you wish to perform:\n");
 
     bmp_file bmp, host, hidden;
