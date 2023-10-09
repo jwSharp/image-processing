@@ -169,14 +169,14 @@ char invert_bits(char color);
  * @param color A single color.
  * @return Returns the linearized sRGB value.
  */
-double linearize(char color);
+double linearize(unsigned char color);
 /**
  * @brief Delinearize a color.
  * @details Delinearize using gamma compression the luminance, a weighted sum of the linearized RGB colors.
  * @param color A single color, linearized and in sRGB colorspace.
  * @return Returns the delinearized monochromat value.
  */
-char delinearize(double color_lin);
+unsigned char delinearize(double color_lin);
 
 /*****************/
 /***** Files *****/
