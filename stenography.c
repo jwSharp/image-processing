@@ -285,7 +285,7 @@ void grayscale(bmp_file bmp)
             double luminance = 0.2126 * r_lin + 0.7152 * g_lin + 0.0722 * b_lin;
 
             // Delinearize and set colors to grayscale
-            char gray_color = delinearize(luminance);
+            unsigned char gray_color = delinearize(luminance);
             color.r = gray_color, color.g = gray_color, color.b = gray_color;
 
             // Write to the photo
@@ -419,7 +419,7 @@ char invert_bits(char color)
 /*****************************/
 /* Compression and Expansion */
 /*****************************/
-double linearize(char color)
+double linearize(unsigned char color)
 {
     // Normalize, convert to the sRGB colorspace
     double color_lin = (double)(color / 255.0);
@@ -431,11 +431,11 @@ double linearize(char color)
     }
     else
     {
-        return pow((color_lin + 0.555) / 1.055, 2.4);
+        return pow((color_lin + 0.055) / 1.055, 2.4);
     }
 }
 
-char delinearize(double color_lin)
+unsigned char delinearize(double color_lin)
 {
     // Delinearize
     if (color_lin <= 0.0031308)
@@ -448,7 +448,7 @@ char delinearize(double color_lin)
     }
 
     // Denormalize, convert to the RGB colorspace
-    return (char)(color_lin * 255);
+    return (unsigned char)(color_lin * 255);
 }
 
 /****************************************/
